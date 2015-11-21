@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-server
+  labels:
+    app: zabbix
+    tier: frontend
+    role: master
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    name: zabbix-web
+  - port: 10051
+    targetPort: 10051
+    name: zabbix-trapper
+  - port: 10052
+    targetPort: 10052
+    name: zabbix-jmx
+  selector:
+    app: zabbix
+    tier: backend
+    role: master
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zabbix
+  labels:
+    app: zabbix
+    tier: backend
+    role: master
+spec:
+  replicas: 1
+  selector:
+    app: zabbix
+    tier: backend
+    role: master
+  template:
+    metadata:
+      labels:
+        name: zabbix-server
+        app: zabbix
+        tier: backend
+        role: master
+    spec:
+      containers:
+        - name: zabbix-server
+          image: zabbix/zabbix-server-2.4
+          ports:
+          - containerPort: 80
+          - containerPort: 10051
+          - containerPort: 10051
+          env:
+          - name: ZS_DBUser
+            value: zabbix
+          - name: ZS_DBPassword
+            value: my_password
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zabbix-db
+  labels:
+    app: zabbix
+    tier: backend-db
+    role: master
+spec:
+  replicas: 1
+  selector:
+    app: zabbix
+    tier: backend-db
+    role: master
+  template:
+    metadata:
+      labels:
+        name: zabbix-db
+        app: zabbix
+        tier: backend-db
+        role: master
+    spec:
+      containers:
+        - name: zabbix-db
+          image: zabbix/zabbix-db-mariadb
+          ports:
+          - containerPort: 3306
+            name: mariadb
+          env:
+          - name: MARIADB_USER
+            value: zabbix
+          - name: MARIADB_PASS
+            value: my_password
+          volumeMounts:
+          - name: zabbix-db-storage
+            mountPath: /var/lib/mysql
+      volumes:
+      - name: zabbix-db-storage
+        persistentVolumeClaim:
+          claimName: zabbix-db-claim
