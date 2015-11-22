@@ -1,16 +1,44 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zabbix-server
+  name: zabbix-frontend
   labels:
     app: zabbix
     tier: frontend
-    role: master
 spec:
   ports:
   - port: 80
     targetPort: 80
     name: zabbix-web
+  selector:
+    app: zabbix
+    tier: zabbix-frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-db
+  labels:
+    app: zabbix
+    tier: db
+spec:
+  ports:
+  - port: 3306
+    targetPort: 3306
+    name: zabbix-db
+  selector:
+    app: zabbix
+    tier: zabbix-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-backend
+  labels:
+    app: zabbix
+    tier: backend
+spec:
+  ports:
   - port: 10051
     targetPort: 10051
     name: zabbix-trapper
@@ -19,43 +47,59 @@ spec:
     name: zabbix-jmx
   selector:
     app: zabbix
-    tier: backend
-    role: master
+    tier: zabbix-backend
 ---
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: zabbix
+  name: zabbix-frontend
   labels:
     app: zabbix
-    tier: backend
-    role: master
+    tier: frontend
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     app: zabbix
-    tier: backend
-    role: master
+    tier: frontend
   template:
     metadata:
       labels:
-        name: zabbix-server
+        name: zabbix-frontend
         app: zabbix
-        tier: backend
-        role: master
+        tier: frontend
     spec:
       containers:
-        - name: zabbix-server
+        - name: zabbix-frontend
           image: zabbix/zabbix-server-2.4
           ports:
           - containerPort: 80
-          - containerPort: 10051
-          - containerPort: 10051
           env:
           - name: ZS_DBUser
             value: zabbix
           - name: ZS_DBPassword
             value: my_password
+          - name: ZS_StartPollers
+            value: 0
+          - name: ZS_StartPollersUnreachable
+            value: 0
+          - name: ZS_StartTrappers
+            value: 0
+          - name: ZS_StartPingers
+            value: 0
+          - name: ZS_StartDiscoverers
+            value: 0
+          - name: ZS_StartHTTPPollers
+            value: 0
+          - name: ZS_StartTimers
+            value: 0
+          - name: ZS_StartJavaPollers
+            value: 0
+          - name: ZS_StartVMwareCollectors
+            value: 0
+          - name: ZS_StartSNMPTrapper
+            value: 0
+          - name: ZS_StartDBSyncers
+            value: 0
 ---
 apiVersion: v1
 kind: ReplicationController
@@ -63,21 +107,18 @@ metadata:
   name: zabbix-db
   labels:
     app: zabbix
-    tier: backend-db
-    role: master
+    tier: zabbix-db
 spec:
   replicas: 1
   selector:
     app: zabbix
-    tier: backend-db
-    role: master
+    tier: zabbix-db
   template:
     metadata:
       labels:
         name: zabbix-db
         app: zabbix
-        tier: backend-db
-        role: master
+        tier: zabbix-db
     spec:
       containers:
         - name: zabbix-db
@@ -97,3 +138,36 @@ spec:
       - name: zabbix-db-storage
         persistentVolumeClaim:
           claimName: zabbix-db-claim
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zabbix-backend
+  labels:
+    app: zabbix
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    app: zabbix
+    tier: backend
+  template:
+    metadata:
+      labels:
+        name: zabbix-backend
+        app: zabbix
+        tier: backend
+    spec:
+      containers:
+        - name: zabbix-backend
+          image: zabbix/zabbix-server-2.4
+          ports:
+          - containerPort: 10051
+            name: zabbix-trapper
+          - containerPort: 10052
+            name: zabbix-jmx
+          env:
+          - name: ZS_DBUser
+            value: zabbix
+          - name: ZS_DBPassword
+            value: my_password
