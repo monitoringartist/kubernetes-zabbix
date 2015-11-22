@@ -5,9 +5,9 @@ Still not ready!
 
 Zabbix on multinode Kubernetes cluster - architecture:
 
-- zabbix-frontend: service + replication controller with 1-x replicas
+- zabbix-frontend: service + replication controller with 1+ replicas
 - zabbix-backend: service + replication controller with 1 replica
-- zabbix-db: service + replication controller with 1 replica and 1 persisten 
+- zabbix-db: service + replication controller with 1 replica and 1 persistent 
 storage
 
 ![Zabbix on Kubernetes schema](https://raw.githubusercontent.com/monitoringartist/kubernetes-zabbix/master/doc/kubernetes-zabbix-schema.png)
