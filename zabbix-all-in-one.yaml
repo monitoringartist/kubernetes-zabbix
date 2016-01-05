@@ -70,7 +70,7 @@ spec:
     spec:
       containers:
         - name: zabbix-frontend
-          image: zabbix/zabbix-server-2.4
+          image: monitoringartist/zabbix-2.4
           ports:
           - containerPort: 80
           env:
@@ -100,6 +100,12 @@ spec:
             value: 0
           - name: ZS_StartDBSyncers
             value: 0
+          - name: ZS_enabled
+            value: false
+          - name: ZA_enabled
+            value: false
+          - name: ZW_enabled
+            value: true
 ---
 apiVersion: v1
 kind: ReplicationController
@@ -160,7 +166,7 @@ spec:
     spec:
       containers:
         - name: zabbix-backend
-          image: zabbix/zabbix-server-2.4
+          image: monitoringartist/zabbix-2.4
           ports:
           - containerPort: 10051
             name: zabbix-trapper
@@ -171,3 +177,9 @@ spec:
             value: zabbix
           - name: ZS_DBPassword
             value: my_password
+          - name: ZS_enabled
+            value: true
+          - name: ZA_enabled
+            value: false
+          - name: ZW_enabled
+            value: false
