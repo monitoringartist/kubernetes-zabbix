@@ -57,7 +57,7 @@ metadata:
     app: zabbix
     tier: frontend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     app: zabbix
     tier: frontend
@@ -78,6 +78,8 @@ spec:
             value: zabbix
           - name: ZS_DBPassword
             value: my_password
+          - name: ZS_DBHost
+            value: zabbix-db
           - name: ZS_enabled
             value: "false"
           - name: ZA_enabled
@@ -120,8 +122,8 @@ spec:
             mountPath: /var/lib/mysql
       volumes:
       - name: zabbix-db-storage
-        persistentVolumeClaim:
-          claimName: zabbix-db-claim
+        emptyDir:
+          medium: Memory
 ---
 apiVersion: v1
 kind: ReplicationController
@@ -155,6 +157,8 @@ spec:
             value: zabbix
           - name: ZS_DBPassword
             value: my_password
+          - name: ZS_DBHost
+            value: zabbix-db
           - name: ZS_enabled
             value: "true"
           - name: ZA_enabled
