@@ -78,34 +78,12 @@ spec:
             value: zabbix
           - name: ZS_DBPassword
             value: my_password
-          - name: ZS_StartPollers
-            value: 0
-          - name: ZS_StartPollersUnreachable
-            value: 0
-          - name: ZS_StartTrappers
-            value: 0
-          - name: ZS_StartPingers
-            value: 0
-          - name: ZS_StartDiscoverers
-            value: 0
-          - name: ZS_StartHTTPPollers
-            value: 0
-          - name: ZS_StartTimers
-            value: 0
-          - name: ZS_StartJavaPollers
-            value: 0
-          - name: ZS_StartVMwareCollectors
-            value: 0
-          - name: ZS_StartSNMPTrapper
-            value: 0
-          - name: ZS_StartDBSyncers
-            value: 0
           - name: ZS_enabled
-            value: false
+            value: "false"
           - name: ZA_enabled
-            value: false
+            value: "false"
           - name: ZW_enabled
-            value: true
+            value: "true"
 ---
 apiVersion: v1
 kind: ReplicationController
@@ -178,8 +156,8 @@ spec:
           - name: ZS_DBPassword
             value: my_password
           - name: ZS_enabled
-            value: true
+            value: "true"
           - name: ZA_enabled
-            value: false
+            value: "false"
           - name: ZW_enabled
-            value: false
+            value: "false"
