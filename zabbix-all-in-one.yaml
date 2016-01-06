@@ -11,8 +11,7 @@ spec:
     targetPort: 80
     name: zabbix-web
   selector:
-    app: zabbix
-    tier: zabbix-frontend
+    name: zabbix-frontend
 ---
 apiVersion: v1
 kind: Service
@@ -27,8 +26,7 @@ spec:
     targetPort: 3306
     name: zabbix-db
   selector:
-    app: zabbix
-    tier: zabbix-db
+    name: zabbix-db
 ---
 apiVersion: v1
 kind: Service
@@ -46,8 +44,7 @@ spec:
     targetPort: 10052
     name: zabbix-jmx
   selector:
-    app: zabbix
-    tier: zabbix-backend
+    name: zabbix-backend
 ---
 apiVersion: v1
 kind: ReplicationController
@@ -58,9 +55,6 @@ metadata:
     tier: frontend
 spec:
   replicas: 1
-  selector:
-    app: zabbix
-    tier: frontend
   template:
     metadata:
       labels:
@@ -96,9 +90,6 @@ metadata:
     tier: zabbix-db
 spec:
   replicas: 1
-  selector:
-    app: zabbix
-    tier: zabbix-db
   template:
     metadata:
       labels:
@@ -134,9 +125,6 @@ metadata:
     tier: backend
 spec:
   replicas: 1
-  selector:
-    app: zabbix
-    tier: backend
   template:
     metadata:
       labels:
