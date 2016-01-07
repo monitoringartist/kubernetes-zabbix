@@ -1,17 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zabbix-frontend
+  name: zabbix
   labels:
     app: zabbix
-    tier: frontend
 spec:
   ports:
   - port: 80
     targetPort: 80
-    name: zabbix-web
   selector:
-    name: zabbix-frontend
+    name: zabbix-web
 ---
 apiVersion: v1
 kind: Service
@@ -31,10 +29,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: zabbix-backend
+  name: zabbix-server
   labels:
     app: zabbix
-    tier: backend
 spec:
   ports:
   - port: 10051
@@ -44,12 +41,12 @@ spec:
     targetPort: 10052
     name: zabbix-jmx
   selector:
-    name: zabbix-backend
+    name: zabbix-server
 ---
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: zabbix-frontend
+  name: zabbix-web
   labels:
     app: zabbix
     tier: frontend
@@ -58,12 +55,11 @@ spec:
   template:
     metadata:
       labels:
-        name: zabbix-frontend
+        name: zabbix-web
         app: zabbix
-        tier: frontend
     spec:
       containers:
-        - name: zabbix-frontend
+        - name: zabbix-web
           image: monitoringartist/zabbix-2.4
           ports:
           - containerPort: 80
@@ -74,6 +70,8 @@ spec:
             value: my_password
           - name: ZS_DBHost
             value: zabbix-db
+          - name: ZW_ZBX_SERVER
+            value: zabbix-server
           - name: ZS_enabled
             value: "false"
           - name: ZA_enabled
@@ -119,21 +117,19 @@ spec:
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: zabbix-backend
+  name: zabbix-server
   labels:
     app: zabbix
-    tier: backend
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: zabbix-backend
+        name: zabbix-server
         app: zabbix
-        tier: backend
     spec:
       containers:
-        - name: zabbix-backend
+        - name: zabbix-server
           image: monitoringartist/zabbix-2.4
           ports:
           - containerPort: 10051
