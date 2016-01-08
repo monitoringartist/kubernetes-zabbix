@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zabbix
+  name: zabbix-web
   labels:
     app: zabbix
 spec:
@@ -51,7 +51,7 @@ metadata:
     app: zabbix
     tier: frontend
 spec:
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -132,6 +132,8 @@ spec:
         - name: zabbix-server
           image: monitoringartist/zabbix-2.4
           ports:
+          - containerPort: 162
+            name: snmptrapd
           - containerPort: 10051
             name: zabbix-trapper
           - containerPort: 10052
@@ -149,3 +151,5 @@ spec:
             value: "false"
           - name: ZW_enabled
             value: "false"
+          - name: SNMPTRAP_enabled
+            value: "true"
