@@ -1,0 +1,155 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-web
+  labels:
+    app: zabbix
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: zabbix-web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-db
+  labels:
+    app: zabbix
+    tier: db
+spec:
+  ports:
+  - port: 3306
+    targetPort: 3306
+    name: zabbix-db
+  selector:
+    name: zabbix-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-server
+  labels:
+    app: zabbix
+spec:
+  ports:
+  - port: 10051
+    targetPort: 10051
+    name: zabbix-trapper
+  - port: 10052
+    targetPort: 10052
+    name: zabbix-jmx
+  selector:
+    name: zabbix-server
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zabbix-web
+  labels:
+    app: zabbix
+    tier: frontend
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: zabbix-web
+        app: zabbix
+    spec:
+      containers:
+        - name: zabbix-web
+          image: monitoringartist/zabbix-2.4
+          ports:
+          - containerPort: 80
+          env:
+          - name: ZS_DBUser
+            value: zabbix
+          - name: ZS_DBPassword
+            value: my_password
+          - name: ZS_DBHost
+            value: zabbix-db
+          - name: ZW_ZBX_SERVER
+            value: zabbix-server
+          - name: ZS_enabled
+            value: "false"
+          - name: ZA_enabled
+            value: "false"
+          - name: ZW_enabled
+            value: "true"
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zabbix-db
+  labels:
+    app: zabbix
+    tier: zabbix-db
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: zabbix-db
+        app: zabbix
+        tier: zabbix-db
+    spec:
+      containers:
+        - name: zabbix-db
+          image: zabbix/zabbix-db-mariadb
+          ports:
+          - containerPort: 3306
+            name: mariadb
+          env:
+          - name: MARIADB_USER
+            value: zabbix
+          - name: MARIADB_PASS
+            value: my_password
+          volumeMounts:
+          - name: zabbix-db-storage
+            mountPath: /var/lib/mysql
+      volumes:
+      - name: zabbix-db-storage
+        emptyDir:
+          medium: Memory
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zabbix-server
+  labels:
+    app: zabbix
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: zabbix-server
+        app: zabbix
+    spec:
+      containers:
+        - name: zabbix-server
+          image: monitoringartist/zabbix-2.4
+          ports:
+          - containerPort: 162
+            name: snmptrapd
+          - containerPort: 10051
+            name: zabbix-trapper
+          - containerPort: 10052
+            name: zabbix-jmx
+          env:
+          - name: ZS_DBUser
+            value: zabbix
+          - name: ZS_DBPassword
+            value: my_password
+          - name: ZS_DBHost
+            value: zabbix-db
+          - name: ZS_enabled
+            value: "true"
+          - name: ZA_enabled
+            value: "true"
+          - name: ZW_enabled
+            value: "false"
+          - name: SNMPTRAP_enabled
+            value: "true"

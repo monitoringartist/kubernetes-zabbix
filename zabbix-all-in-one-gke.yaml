@@ -10,6 +10,7 @@ spec:
     targetPort: 80
   selector:
     name: zabbix-web
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -148,7 +149,7 @@ spec:
           - name: ZS_enabled
             value: "true"
           - name: ZA_enabled
-            value: "false"
+            value: "true"
           - name: ZW_enabled
             value: "false"
           - name: SNMPTRAP_enabled
