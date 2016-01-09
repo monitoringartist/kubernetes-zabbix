@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  labels:
+    app: grafana
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    name: grafana
+  #type: LoadBalancer
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: grafana
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: grafana
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: monitoringartist/grafana-xxl
+          ports:
+          - containerPort: 3000
+          volumeMounts:
+          - name: grafana-storage
+            mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-storage
+        emptyDir:
+          medium: Memory

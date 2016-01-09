@@ -27,6 +27,9 @@ Engine can be used eventually). It needs own load balancer. Recommended
 Zabbix infrastructure on Google Container Engine Kubernetes cluster. Cloud
 network balancing is used.
 
+- grafana-with-zabbix-datasource.yaml
+[Grafana XXL](https://github.com/monitoringartist/grafana-xxl) with Zabbix datasource.
+
 ## Schema
 
 ![Zabbix on Kubernetes schema](https://raw.githubusercontent.com/monitoringartist/kubernetes-zabbix/master/doc/kubernetes-zabbix-schema.png)
