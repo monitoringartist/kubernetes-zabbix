@@ -44,6 +44,9 @@ kubectl create -f zabbix-all-in-one-bare-metal.yaml
 kubectl get svc,rc,po | grep zabbix
 ```
 
+Zabbix/Grafana Kubernetes cluster on Google Container Engine (GKE):
+[![ScreenShot](https://raw.githubusercontent.com/monitoringartist/kubernetes-zabbix/master/doc/kubernetes-zabbix-youtube.png)](https://www.youtube.com/watch?v=F2dBzuDy0Ns)
+
 # Author
 
 [Devops Monitoring zExpert](http://www.jangaraj.com 'DevOps / Docker / Kubernetes / Zabbix / Zenoss / Monitoring'), who loves monitoring
