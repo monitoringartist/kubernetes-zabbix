@@ -17,17 +17,20 @@ for free:
 
 YAML files:
 
-- zabbix-all-in-one-bare-metal.yaml
+- zabbix-all-in-one-bare-metal.yaml:
+
 Zabbix infrastructure on bate metal Kubernetes cluster (GCE - Google Computer 
 Engine can be used eventually). It needs own load balancer. Recommended
 [HAProxy Kubernetes loadbalancer]
 (https://github.com/kubernetes/contrib/tree/master/service-loadbalancer)
 
-- zabbix-all-in-one-gke.yaml
+- zabbix-all-in-one-gke.yaml:
+
 Zabbix infrastructure on Google Container Engine Kubernetes cluster. Cloud
 network balancing is used.
 
-- grafana-with-zabbix-datasource.yaml
+- grafana-with-zabbix-datasource.yaml:
+
 [Grafana XXL](https://github.com/monitoringartist/grafana-xxl) with Zabbix datasource.
 
 ## Schema
@@ -38,11 +41,11 @@ network balancing is used.
 
 ```
 kubectl create -f zabbix-all-in-one-bare-metal.yaml
-```
-
-```
 kubectl get svc,rc,po | grep zabbix
 ```
+
+Zabbix/Grafana Kubernetes cluster on Google Container Engine (GKE):
+[![ScreenShot](https://raw.githubusercontent.com/monitoringartist/kubernetes-zabbix/master/doc/kubernetes-zabbix-youtube.png)](https://www.youtube.com/watch?v=F2dBzuDy0Ns)
 
 # Author
 
