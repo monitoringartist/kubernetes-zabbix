@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-web
+  labels:
+    app: zabbix
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: zabbix-web
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-server
+  labels:
+    app: zabbix
+spec:
+  ports:
+  - port: 10051
+    targetPort: 10051
+    name: zabbix-trapper
+  - port: 10052
+    targetPort: 10052
+    name: zabbix-jmx
+  selector:
+    name: zabbix-server
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zabbix-web
+  labels:
+    app: zabbix
+    tier: frontend
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: zabbix-web
+        app: zabbix
+    spec:
+      containers:
+        - name: zabbix-web
+          image: monitoringartist/zabbix-2.4
+          ports:
+          - containerPort: 80
+          env:
+          - name: PHP_memory_limit
+            value: 512M
+          - name: ZS_DBUser
+            value: root
+          - name: ZS_DBPassword
+            value: my_password
+          - name: ZS_DBHost
+            value: 104.155.77.247
+          - name: ZW_ZBX_SERVER
+            value: zabbix-server
+          - name: ZS_enabled
+            value: "false"
+          - name: ZA_enabled
+            value: "false"
+          - name: ZW_enabled
+            value: "true"
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zabbix-server
+  labels:
+    app: zabbix
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: zabbix-server
+        app: zabbix
+        id: zabbix-server  
+    spec:
+      containers:
+        - name: zabbix-server
+          image: monitoringartist/zabbix-2.4
+          ports:
+          - containerPort: 162
+            name: snmptrapd
+          - containerPort: 10051
+            name: zabbix-trapper
+          - containerPort: 10052
+            name: zabbix-jmx
+          env:
+          - name: ZS_StartPollers
+            value: "1000"
+          - name: ZS_StartDBSyncers
+            value: "60"
+          - name: ZS_StartTimers
+            value: "20"
+          - name: ZS_StartPollersUnreachable
+            value: "20"
+          - name: ZS_CacheSize
+            value: 32M
+          - name: ZS_HistoryCacheSize
+            value: 512M
+          - name: ZS_Timeout
+            value: "3"
+          - name: ZS_DBUser
+            value: root
+          - name: ZS_DBPassword
+            value: my_password
+          - name: ZS_DBHost
+            value: 104.155.77.247
+          - name: ZS_enabled
+            value: "true"
+          - name: ZA_enabled
+            value: "true"
+          - name: ZW_enabled
+            value: "false"
+          - name: SNMPTRAP_enabled
+            value: "true"
+          - name: ZS_DebugLevel
+            value: "4"

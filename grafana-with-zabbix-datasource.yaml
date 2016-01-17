@@ -10,7 +10,7 @@ spec:
     targetPort: 3000
   selector:
     name: grafana
-  #type: LoadBalancer
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: ReplicationController
