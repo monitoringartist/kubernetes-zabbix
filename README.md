@@ -1,6 +1,6 @@
 # Zabbix on Kubernetes (beta)
 
-Zabbix on multinode Kubernetes cluster - architecture:
+Zabbix 3.0 on multinode Kubernetes cluster - architecture:
 
 - zabbix-web: service + replication controller with 1+ replicas
 - zabbix-server: service + replication controller with 1 replica
@@ -35,9 +35,9 @@ network balancing is used.
 
 ## Schema
 
-![Zabbix on Kubernetes schema](https://raw.githubusercontent.com/monitoringartist/kubernetes-zabbix/master/doc/kubernetes-zabbix-schema.png)
+![Zabbix 3.0 on Kubernetes schema](https://raw.githubusercontent.com/monitoringartist/kubernetes-zabbix/master/doc/kubernetes-zabbix-schema.png)
 
-## Runnig Zabbix infrastructure on Kubernetes:
+## Runnig Zabbix 3.0 infrastructure on Kubernetes:
 
 ```
 kubectl create -f zabbix-all-in-one-bare-metal.yaml
