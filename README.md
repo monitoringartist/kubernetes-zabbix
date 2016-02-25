@@ -33,7 +33,7 @@ network balancing is used.
 
 [Grafana XXL](https://github.com/monitoringartist/grafana-xxl) with Zabbix datasource.
 
-## Schema
+## Zabbix Kubernetes Service/Replication controller schema
 
 ![Zabbix 3.0 on Kubernetes schema](https://raw.githubusercontent.com/monitoringartist/kubernetes-zabbix/master/doc/kubernetes-zabbix-schema.png)
 
