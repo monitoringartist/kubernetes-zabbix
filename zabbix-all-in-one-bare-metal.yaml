@@ -60,7 +60,7 @@ spec:
     spec:
       containers:
         - name: zabbix-web
-          image: zabbix/zabbix-3.0:latest
+          image: monitoringartist/zabbix-3.0-xxl:latest
           ports:
           - containerPort: 80
           env:
@@ -97,7 +97,7 @@ spec:
     spec:
       containers:
         - name: zabbix-db
-          image: zabbix/zabbix-db-mariadb
+          image: monitoringartist/zabbix-db-mariadb
           ports:
           - containerPort: 3306
             name: mariadb
@@ -130,7 +130,7 @@ spec:
     spec:
       containers:
         - name: zabbix-server
-          image: zabbix/zabbix-3.0:latest
+          image: monitoringartist/zabbix-3.0-xxl:latest
           ports:
           - containerPort: 162
             name: snmptrapd
