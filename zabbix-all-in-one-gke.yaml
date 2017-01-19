@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
         - name: zabbix-web
-          image: monitoringartist/zabbix-3.0-xxl:latest
+          image: monitoringartist/zabbix-xxl:latest
           ports:
           - containerPort: 80
           env:
@@ -131,7 +131,7 @@ spec:
     spec:
       containers:
         - name: zabbix-server
-          image: monitoringartist/zabbix-3.0-xxl:latest
+          image: monitoringartist/zabbix-xxl:latest
           ports:
           - containerPort: 162
             name: snmptrapd
