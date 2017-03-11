@@ -17,7 +17,7 @@ spec:
       #  app: dockbix
       hostPID: true
       hostIPC: true
-      hostNetwork: true
+      hostNetwork: false
       containers:
         - resources:
             requests:
@@ -26,9 +26,9 @@ spec:
             privileged: true
           env:
             - name: ZA_Server
-              value: "<ZABBIX SERVER IP/DNS NAME>"
+              value: zabbix-server
             - name: ZA_ServerActive
-              value: "<ZABBIX SERVER IP/DNS NAME>"
+              value: zabbix-server
           image: monitoringartist/dockbix-agent-xxl-limited
           name: dockbix
           volumeMounts:
