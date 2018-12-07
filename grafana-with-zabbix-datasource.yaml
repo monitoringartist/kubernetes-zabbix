@@ -8,9 +8,11 @@ spec:
   ports:
   - port: 80
     targetPort: 3000
+    nodePort: 30607
   selector:
     name: grafana
-  type: LoadBalancer
+  # type: LoadBalancer
+  type: NodePort
 ---
 apiVersion: v1
 kind: ReplicationController

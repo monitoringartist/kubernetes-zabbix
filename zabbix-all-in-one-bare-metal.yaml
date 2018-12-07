@@ -5,9 +5,11 @@ metadata:
   labels:
     app: zabbix
 spec:
+  type: NodePort
   ports:
   - port: 80
     targetPort: 80
+    nodePort: 31117
   selector:
     name: zabbix-web
 ---
@@ -51,7 +53,7 @@ metadata:
     app: zabbix
     tier: frontend
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
