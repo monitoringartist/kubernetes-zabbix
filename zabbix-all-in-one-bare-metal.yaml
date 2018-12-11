@@ -113,8 +113,8 @@ spec:
             mountPath: /var/lib/mysql
       volumes:
       - name: zabbix-db-storage
-        emptyDir:
-          medium: Memory
+        persistentVolumeClaim:
+          claimName: zabbix-db-storage-pvc
 ---
 apiVersion: v1
 kind: ReplicationController

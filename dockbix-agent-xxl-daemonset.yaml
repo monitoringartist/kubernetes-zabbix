@@ -21,8 +21,8 @@ spec:
       containers:
         - image: monitoringartist/dockbix-agent-xxl-limited
           name: dockbix
-          # securityContext:
-          #   privileged: true
+          securityContext:
+             privileged: true
           resources:
             requests:
               cpu: 0.15
