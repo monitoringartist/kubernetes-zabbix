@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: dockbix-agent-xxl
+  name: dockbix-agent
   labels:
     tier: monitoring
-    app: dockbix-agent-xxl
+    app: dockbix-agent
     version: v1
 spec:
   template:
@@ -19,7 +19,7 @@ spec:
       hostIPC: true
       hostNetwork: false
       containers:
-        - image: monitoringartist/dockbix-agent-xxl-limited
+        - image: zabbix/zabbix-agent:latest
           name: dockbix
           securityContext:
              privileged: true
@@ -28,10 +28,12 @@ spec:
           #     cpu: 0.15
 
           env:
-            - name: ZA_Server
+            - name: ZBX_SERVER_HOST
               value: "zabbix-server"
-            - name: ZA_ServerActive
-              value: "zabbix-server"
+            - name: ZBX_SERVER_PORT
+              value: "10051"
+            - name: ZBX_ACTIVE_ALLOW
+              value: "true"
 
           volumeMounts:
             - name: rootfs
