@@ -23,9 +23,9 @@ spec:
           name: dockbix
           securityContext:
              privileged: true
-          # resources:
-          #   requests:k
-          #     cpu: 0.15
+          resources:
+            requests:k
+              cpu: 0.15
 
           env:
             - name: ZA_Server
