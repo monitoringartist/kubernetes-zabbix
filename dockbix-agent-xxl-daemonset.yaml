@@ -24,7 +24,7 @@ spec:
           securityContext:
              privileged: true
           # resources:
-          #   requests:
+          #   requests:k
           #     cpu: 0.15
 
           env:

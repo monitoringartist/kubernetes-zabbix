@@ -1,3 +1,16 @@
+---
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: zabbix-db-storage-pvc
+    spec:
+      storageClassName: "nfs"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -5,9 +18,11 @@ metadata:
   labels:
     app: zabbix
 spec:
+  type: NodePort
   ports:
   - port: 80
     targetPort: 80
+    nodePort: 31117
   selector:
     name: zabbix-web
 ---
@@ -51,7 +66,7 @@ metadata:
     app: zabbix
     tier: frontend
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -111,8 +126,8 @@ spec:
             mountPath: /var/lib/mysql
       volumes:
       - name: zabbix-db-storage
-        emptyDir:
-          medium: Memory
+        persistentVolumeClaim:
+          claimName: zabbix-db-storage-pvc
 ---
 apiVersion: v1
 kind: ReplicationController
