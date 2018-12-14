@@ -19,20 +19,18 @@ spec:
       hostIPC: true
       hostNetwork: false
       containers:
-        - image: monitoringartist/dockbix-agent-xxl-limited
-          name: dockbix
-          securityContext:
-             privileged: true
-          resources:
-            requests:k
+        - resources:
+            requests:
               cpu: 0.15
-
+          securityContext:
+            privileged: true
           env:
             - name: ZA_Server
               value: "zabbix-server"
             - name: ZA_ServerActive
               value: "zabbix-server"
-
+          image: monitoringartist/dockbix-agent-xxl-limited
+          name: dockbix
           volumeMounts:
             - name: rootfs
               mountPath: /rootfs
