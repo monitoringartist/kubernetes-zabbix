@@ -26,9 +26,9 @@ spec:
             privileged: true
           env:
             - name: ZA_Server
-              value: zabbix-server
+              value: "zabbix-server"
             - name: ZA_ServerActive
-              value: zabbix-server
+              value: "zabbix-server"
           image: monitoringartist/dockbix-agent-xxl-limited
           name: dockbix
           volumeMounts:

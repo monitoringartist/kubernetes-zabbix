@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: zabbix-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: zabbix.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: zabbix-web
+          servicePort: 80
